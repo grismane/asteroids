@@ -32,6 +32,8 @@ def main():
                 return
         screen.fill(0x000000)
 
+        player.update(dt)
+
         # draw the player object
         player.draw(screen)
 
