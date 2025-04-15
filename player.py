@@ -3,12 +3,14 @@
 from circleshape import CircleShape
 from constants import *
 import pygame
+from shot import Shot
 
 # Player class inherits from CircleShape
 class Player(CircleShape):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
+        self.cooldown = 0
 
     # in the player class
     def triangle(self):
@@ -38,7 +40,23 @@ class Player(CircleShape):
             self.move(dt)
         if keys[pygame.K_s]:
             self.move(-dt)
+        if keys[pygame.K_SPACE]:
+            self.shoot()
+        
+        self.cooldown -= dt
     
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
+
+    def shoot(self):
+        if self.cooldown <= 0:
+            # Create the bullet at the front of the ship
+            forward = pygame.Vector2(0, 1).rotate(self.rotation)
+            bullet_pos = self.position + forward * (SHOT_RADIUS + PLAYER_RADIUS) # Position at ship's front
+            print(f"Ship at ({self.position.x}, {self.position.y}), bullet spawned at ({bullet_pos.x}, {bullet_pos.y})")
+
+            bullet = Shot(bullet_pos.x, bullet_pos.y)
+            bullet.velocity = forward * PLAYER_SHOOT_SPEED
+            self.cooldown = PLAYER_SHOOT_COOLDOWN
+        
