@@ -59,7 +59,7 @@ def main():
             for bullet in shots:
                 if bullet.check_collision(ast):
                     bullet.kill()
-                    ast.kill()
+                    ast.split()
 
         # check for player-asteroid collisions
         for ast in asteroids:
